@@ -1,6 +1,6 @@
 node {
   stage 'Checkout'
-  git 'ssh://git@github.com:nadellavamsee/jenkins.git'
+  git 'ssh://github.com/nadellavamsee/jenkins.git'
  
   stage 'Docker build'
   docker.build('nginx')
