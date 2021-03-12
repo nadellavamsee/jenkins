@@ -1,12 +1,30 @@
-node {
-  stage 'Checkout'
-  git 'ssh://github.com/nadellavamsee/jenkins.git'
- 
-  stage 'Docker build'
-  docker.build('nginx')
- 
-  stage 'Docker push'
-  docker.withRegistry('https://registry.hub.docker.com', 'credentials-id') {
-    docker.image('nginx').push('latest')
+pipeline {
+  environment {
+    registry = "nadellavamsee/jenkins-demo"
+    registryCredential = ‘docker-id’
+  }
+  agent any
+  stages {
+    stage('Cloning Git') {
+      steps {
+        git 'https://github.com/nadellavamsee/jenkins.git'
+      }
+    }
+    stage('Building image') {
+      steps{
+        script {
+          docker.build registry + ":$BUILD_NUMBER"
+        }
+      }
+    }
   }
 }
+stage('Deploy Image') {
+      steps{
+        script {
+          docker.withRegistry( '', registryCredential ) {
+           docker.image('nginx').push('latest') 
+ 	 }
+        }
+      }
+    }
