@@ -1,6 +1,6 @@
 pipeline {
   environment {
-    registry = "docker_hub_account/nadellavamsee"
+    registry = "nadellavamsee/testdemo"
     registryCredential = 'dockerid'
   }
   agent any
