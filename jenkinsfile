@@ -1,7 +1,7 @@
 pipeline {
   environment {
     registry = "nadellavamsee/jenkins-demo"
-    registryCredential = ‘docker-id’
+#    registryCredential = ‘docker-id’
   }
   agent any
   stages {
@@ -22,8 +22,9 @@ pipeline {
 stage('Deploy Image') {
       steps{
         script {
-          docker.withRegistry( '', registryCredential ) {
-           docker.image('nginx').push('latest') 
+          docker.withRegistry( 'https://registry.hub.docker.com', 'docker-id' ) {
+           app.push("${env.BUILD_NUMBER}")
+            app.push("latest")
  	 }
         }
       }
