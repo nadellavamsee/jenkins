@@ -32,35 +32,25 @@ spec:
 
     stage('Build') {
       environment {
-        DOCKERHUB_CREDS = credentials('dockerhub')
+        DOCKERHUB_CREDS = credentials('dockerid')
       }
       steps {
         container('docker') {
           // Build new image
-          sh "until docker ps; do sleep 3; done && docker build -t nadellavamsee/jenkins:${env.GIT_COMMIT} ."
+          sh "until docker ps; do sleep 3; done && docker build -t nadellavamsee/nginx:${env.GIT_COMMIT} ."
           // Publish new image
-          sh "docker login --username $DOCKERHUB_CREDS_USR --password $DOCKERHUB_CREDS_PSW && docker push nadellavamsee/jenkins:${env.GIT_COMMIT}"
+          sh "docker login --username $DOCKERHUB_CREDS_USR --password $DOCKERHUB_CREDS_PSW && docker push nadellavamsee/nginx:${env.GIT_COMMIT}"
         }
       }
     }
-<<<<<<< HEAD
-=======
-    stage('Deploy Image') {
-      steps{
-        script {
-          docker.withRegistry( '', registryCredential ) {
-           dockerImage.push("$BUILD_NUMBER")
-             dockerImage.push('latest')
->>>>>>> 7626d862f023a4aa202e40cd257b154d8f194d4d
 
-    stage('Deploy DEV') {
+    stage('Deploy Dev') {
       environment {
         GIT_CREDS = credentials('git')
       }
       steps {
         container('tools') {
           sh "git clone https://$GIT_CREDS_USR:$GIT_CREDS_PSW@github.com/nadellavamsee/argocd.git"
-          sh "git config --global user.email 'ci@ci.com'"
 
           dir("argocd-demo-deploy") {
             sh "cd ./e2e && kustomize edit set image alexmt/argocd-demo:${env.GIT_COMMIT}"
