@@ -1,4 +1,6 @@
-#FROM httpd:2.4
-#COPY ./public-html/ /usr/local/apache2/htdocs/
-FROM nginx:latest
-COPY ./index.html /usr/share/nginx/html/index.html
+FROM node:10.15.3-stretch
+
+ADD main.js /app/main.js
+
+ENTRYPOINT [ "node", "/app/main.js" ]
+
