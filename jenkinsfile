@@ -28,7 +28,7 @@ pipeline {
       steps{
         script {
           docker.withRegistry( '', registryCredential ) {
-            dockerImage.push "imagename:${env.GIT_COMMIT}"
+           dockerImage.push("$BUILD_NUMBER")
              dockerImage.push('latest')
 
           }
