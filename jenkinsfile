@@ -1,6 +1,6 @@
 pipeline {
   environment {
-    imagename = "nadellavamsee/nginx"
+    registry = "nadellavamsee/nginx"
     registryCredential = 'dockerid'
     dockerImage = ''
   }
