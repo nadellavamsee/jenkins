@@ -1,39 +1,8 @@
-
 pipeline {
-<<<<<<< HEAD
   environment {
     imagename = "nadellavamsee/nginx"
     registryCredential = 'dockerid'
     dockerImage = ''
-=======
-  agent {
-    kubernetes {
-      defaultContainer 'jnlp'
-      yaml """
-apiVersion: v1
-kind: Pod
-spec:
-  containers:
-  - name: dind
-    image: docker:18.09-dind
-    securityContext:
-      privileged: true
-  - name: docker
-    env:
-    - name: DOCKER_HOST
-      value: 127.0.0.1
-    image: docker:18.09
-    command:
-    - cat
-    tty: true
-  - name: tools
-    image: argoproj/argo-cd-ci-builder:v0.13.1
-    command:
-    - cat
-    tty: true
-"""
-    }
->>>>>>> 1cf28faf28557c4e8eb92a9a2c22f1188153b815
   }
   
   
@@ -43,7 +12,6 @@ spec:
       steps {
         git([url: 'https://github.com/nadellavamsee/jenkins.git', branch: 'master', credentialsId: 'git-id'])
 
-<<<<<<< HEAD
       }
     }
     
@@ -62,33 +30,6 @@ spec:
             dockerImage.push "imagename:${env.GIT_COMMIT}"
              dockerImage.push('latest')
 
-=======
-    stage('Build') {
-      environment {
-        DOCKERHUB_CREDS = credentials('dockerid')
-      }
-      steps {
-        container('docker') {
-          // Build new image
-          sh "until docker ps; do sleep 3; done && docker build -t nadellavamsee/nginx:${env.GIT_COMMIT} ."
-          // Publish new image
-          sh "docker login --username $DOCKERHUB_CREDS_USR --password $DOCKERHUB_CREDS_PSW && docker push nadellavamsee/nginx:${env.GIT_COMMIT}"
-        }
-      }
-    }
-
-    stage('Deploy Dev') {
-      environment {
-        GIT_CREDS = credentials('git')
-      }
-      steps {
-        container('tools') {
-          sh "git clone https://$GIT_CREDS_USR:$GIT_CREDS_PSW@github.com/nadellavamsee/argocd.git"
-
-          dir("argocd-demo-deploy") {
-            sh "cd ./e2e && kustomize edit set image alexmt/argocd-demo:${env.GIT_COMMIT}"
-            sh "git commit -am 'Publish new version' && git push || echo 'no changes'"
->>>>>>> 1cf28faf28557c4e8eb92a9a2c22f1188153b815
           }
         }
       }
