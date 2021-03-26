@@ -43,15 +43,6 @@ spec:
         }
       }
     }
-<<<<<<< HEAD
-=======
-    stage('Deploy Image') {
-      steps{
-        script {
-          docker.withRegistry( '', registryCredential ) {
-           dockerImage.push("$BUILD_NUMBER")
-             dockerImage.push('latest')
->>>>>>> 7626d862f023a4aa202e40cd257b154d8f194d4d
 
     stage('Deploy DEV') {
       environment {
