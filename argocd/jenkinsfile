@@ -32,7 +32,7 @@ spec:
 
     stage('Build') {
       environment {
-        DOCKERHUB_CREDS = credentials('dockerhub')
+        DOCKERHUB_CREDS = credentials('dockerid')
       }
       steps {
         container('docker') {
@@ -46,15 +46,15 @@ spec:
 
     stage('Deploy DEV') {
       environment {
-        GIT_CREDS = credentials('git')
+        GIT_CREDS = credentials('git-id')
       }
       steps {
         container('tools') {
           sh "git clone https://$GIT_CREDS_USR:$GIT_CREDS_PSW@github.com/nadellavamsee/argocd.git"
           sh "git config --global user.email 'ci@ci.com'"
 
-          dir("argocd-demo-deploy") {
-            sh "cd ./e2e && kustomize edit set image alexmt/argocd-demo:${env.GIT_COMMIT}"
+          dir("argocd/argocd-deploy") {
+            sh "cd ./e2e && kustomize edit set image nadellavamsee/argocd-deploy:${env.GIT_COMMIT}"
             sh "git commit -am 'Publish new version' && git push || echo 'no changes'"
           }
         }
@@ -65,7 +65,7 @@ spec:
       steps {
         input message:'Approve deployment?'
         container('tools') {
-          dir("argocd") {
+          dir("argocd/argocd-deploy") {
             sh "cd ./prod && kustomize edit set image nadellavamsee/argocd:${env.GIT_COMMIT}"
             sh "git commit -am 'Publish new version' && git push || echo 'no changes'"
           }
